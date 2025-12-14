@@ -4,9 +4,6 @@
 
 This structure fills the gap between the rigid hierarchies of traditional corporations and the unstructured nature of volunteer projects. It provides a ready-to-use **operating system** for managing labor, voting rights, and revenue, independent of legal status.
 
-```mermaid %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#2496ed', 'edgeLabelBackground':'#ffffff', 'tertiaryColor': '#f6f8fa'}}}%% graph TD User1((Dev A)) & User2((Dev B)) & User3((Dev C)) -->|Join & Vote| Org[🏛️ The Cooperative]
-```
-
 ## 🎯 Why Start a Software Cooperative with Co-op Kernel?
 
 Software teams often fall apart not due to technical issues, but due to "human" issues (unfair distribution, unclear governance). Co-op Kernel solves these problems with mathematical and democratic rules.
@@ -16,9 +13,6 @@ Here, there are no bosses; there are protocols.
 * **Voting Rights (1 Person = 1 Vote):** Those who contribute labor govern, not those who provide capital. Whether you are a founder or a new member, your vote carries equal weight in critical decisions.
 * **Contributor vs. Member Balance:** Anyone can contribute ("Contributor"), but those who consistently commit labor and earn trust ("Core Member") gain a say in governance. This protects meritocracy.
 * **Freedom (Right to Fork):** The system's ultimate guarantee is the right to leave. If the community becomes corrupt, a minority group is free to copy the project and the rules (Fork) and go their own way. No one is locked in.
-
-```mermaid %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#2da44e', 'edgeLabelBackground':'#ffffff', 'tertiaryColor': '#f6f8fa'}}}%% graph LR A[💰 Revenue Incoming] -->|Monthly Total| B{⚙️ The Split} B -->|20%| C(🏦 Reserve Fund\nFuture Dev & Costs) B -->|80%| D(🏊‍♂️ Distributable Pool)
-```
 
 ### 2. Algorithmic Fairness (Formula-Based Earnings)
 Value distribution is based on open formulas, not subjective opinions or negotiation skills.
@@ -45,9 +39,6 @@ You don't need a physical office, but you need a digital HQ.
     * *Why?* In GitHub, the `.github` repository is special. Its `README.md` (your Manifesto) will automatically be displayed on your Organization's public profile page!
     * *Alternative:* Name it `governance` or `meta`.
 
-```mermaid %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#d2a8ff', 'tertiaryColor': '#f6f8fa'}}}%% graph TD Org[🏛️ YOUR GITHUB ORGANIZATION\n The Cooperative Roof] -->|Contains| GovRepo[📜 .github Repo\n The Constitution & HQ] Org -->|Contains| ProjA[📦 vpn-app Repo\n The Factory 1] Org -->|Contains| ProjB[📦 accounting-lib Repo\n The Factory 2]
-```
-
 ### Phase 2: Ratify the Constitution
 Customize the rules to fit your team's needs.
 1.  **Sign the Manifesto:** Read `MANIFESTO.md`. Founding members should add their names to the bottom via a Pull Request to make their first commitment.
@@ -67,9 +58,6 @@ Now that the government is set, build the factories.
 2.  **Set Up Labels:** In these new project repos, create the scoring labels (e.g., `score:1`, `score:1.5`) as defined in your constitution.
 3.  **Start Coding:** Open issues in these project repos, assign scores, and start developing.
 4.  **Payday:** At the end of the month, use the **Admin Dashboard** (from Phase 3) to calculate payouts for each project repository separately.
-
-```mermaid graph LR Step1(📝 Open Issue) --> Step2(🏷️ Add Score Label) Step2 --> Step3(💻 Write Code & PR) Step3 --> Step4(✅ Merge & Close) Step4 --> Step5(💰 Month End: Get Paid)
-```
 
 > *"Congratulations! You now have a software cooperative with no boss, clear rules, and fair revenue sharing."*
 
