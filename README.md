@@ -4,6 +4,9 @@
 
 This structure fills the gap between the rigid hierarchies of traditional corporations and the unstructured nature of volunteer projects. It provides a ready-to-use **operating system** for managing labor, voting rights, and revenue, independent of legal status.
 
+```mermaid %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#2496ed', 'edgeLabelBackground':'#ffffff', 'tertiaryColor': '#f6f8fa'}}}%% graph TD User1((Dev A)) & User2((Dev B)) & User3((Dev C)) -->|Join & Vote| Org[🏛️ The Cooperative]
+```
+
 ## 🎯 Why Start a Software Cooperative with Co-op Kernel?
 
 Software teams often fall apart not due to technical issues, but due to "human" issues (unfair distribution, unclear governance). Co-op Kernel solves these problems with mathematical and democratic rules.
@@ -13,6 +16,9 @@ Here, there are no bosses; there are protocols.
 * **Voting Rights (1 Person = 1 Vote):** Those who contribute labor govern, not those who provide capital. Whether you are a founder or a new member, your vote carries equal weight in critical decisions.
 * **Contributor vs. Member Balance:** Anyone can contribute ("Contributor"), but those who consistently commit labor and earn trust ("Core Member") gain a say in governance. This protects meritocracy.
 * **Freedom (Right to Fork):** The system's ultimate guarantee is the right to leave. If the community becomes corrupt, a minority group is free to copy the project and the rules (Fork) and go their own way. No one is locked in.
+
+```mermaid %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#2da44e', 'edgeLabelBackground':'#ffffff', 'tertiaryColor': '#f6f8fa'}}}%% graph LR A[💰 Revenue Incoming] -->|Monthly Total| B{⚙️ The Split} B -->|20%| C(🏦 Reserve Fund\nFuture Dev & Costs) B -->|80%| D(🏊‍♂️ Distributable Pool)
+```
 
 ### 2. Algorithmic Fairness (Formula-Based Earnings)
 Value distribution is based on open formulas, not subjective opinions or negotiation skills.
@@ -27,32 +33,43 @@ Bureaucracy must not stop production.
 
 ## 🚀 Step-by-Step: Build Your Software Cooperative Now
 
-Follow these steps to establish your own democratic software community.
+Follow these steps to establish your own democratic software community using this framework.
 
-### Phase 1: Lay the Digital Foundation
+### Phase 1: Establish the Headquarters (Organization)
 You don't need a physical office, but you need a digital HQ.
 1.  **Create a GitHub Organization:** Open a free GitHub Organization (e.g., `github.com/OurCoop`).
-2.  **Copy This Core:** **Fork** this repository (`coop-kernel`) into your organization or use it as a Template.
-3.  **Name It:** Rename the repository to `meta` or `governance`. This repo will serve as your cooperative's constitution.
+2.  **Use This Template:** Click the green **"Use this template"** button in this repository.
+3.  **Select Owner:** Choose your newly created Organization.
+4.  **Name the Repository:**
+    * **Pro Tip:** Name this repository **`.github`**.
+    * *Why?* In GitHub, the `.github` repository is special. Its `README.md` (your Manifesto) will automatically be displayed on your Organization's public profile page!
+    * *Alternative:* Name it `governance` or `meta`.
 
-### Phase 2: Configure the Constitution
+```mermaid %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#d2a8ff', 'tertiaryColor': '#f6f8fa'}}}%% graph TD Org[🏛️ YOUR GITHUB ORGANIZATION\n The Cooperative Roof] -->|Contains| GovRepo[📜 .github Repo\n The Constitution & HQ] Org -->|Contains| ProjA[📦 vpn-app Repo\n The Factory 1] Org -->|Contains| ProjB[📦 accounting-lib Repo\n The Factory 2]
+```
+
+### Phase 2: Ratify the Constitution
 Customize the rules to fit your team's needs.
-1.  **Sign the Manifesto:** Read `MANIFESTO.md`. As founding members, add your names to the bottom (via Pull Request) to make your first commitment.
+1.  **Sign the Manifesto:** Read `MANIFESTO.md`. Founding members should add their names to the bottom via a Pull Request to make their first commitment.
 2.  **Adjust Economics:** Open `ECONOMICS.md`.
-    * Are the complexity multipliers (e.g., Backend 1.5x) suitable for you?
+    * Are the complexity multipliers (e.g., Backend 1.5x) suitable?
     * Is the Reserve Fund rate (20%) sufficient? If not, edit and `Commit`.
 
-### Phase 3: Connect the Tools
+### Phase 3: Activate the Tools
 Set up the technical infrastructure for transparency.
-1.  **Communication (Discord/Mattermost):** Set up your server and add the invite link to the `README.md`.
-2.  **Finance (Open Collective/Crypto):** Open a page on Open Collective or create a Gnosis Safe wallet. Add the links/addresses to the repo.
-3.  **Admin Dashboard:** Enable **GitHub Pages** for this repository to publish the `admin/dashboard.html` file. You now have a publicly accessible payout calculator website.
+1.  **Communication:** Set up a Discord server and add the invite link to this README.
+2.  **Finance:** Open an Open Collective page (for fiat) or a Gnosis Safe wallet (for crypto). Add the links to this repo.
+3.  **Admin Dashboard:** Go to `Settings > Pages` in this repository. Enable **GitHub Pages** (Source: `main` branch). You now have a live payout calculator website at `https://[YourOrg].github.io/.github/admin/dashboard.html`.
 
-### Phase 4: Start Producing and Sharing
-Start the engine.
-1.  **Invite First Members:** Add trusted developers to the organization.
-2.  **Open the First Issue:** Define a task and add a difficulty label (e.g., `score:1.5`).
-3.  **Develop & Distribute:** At the end of the month, when the project generates revenue, check the Admin Dashboard to see who earned what and distribute the payments transparently.
+### Phase 4: Create Workspaces (Product Repos)
+Now that the government is set, build the factories.
+1.  **Create New Repositories:** Create separate repositories inside your organization for your actual software projects (e.g., `vpn-app`, `accounting-lib`).
+2.  **Set Up Labels:** In these new project repos, create the scoring labels (e.g., `score:1`, `score:1.5`) as defined in your constitution.
+3.  **Start Coding:** Open issues in these project repos, assign scores, and start developing.
+4.  **Payday:** At the end of the month, use the **Admin Dashboard** (from Phase 3) to calculate payouts for each project repository separately.
+
+```mermaid graph LR Step1(📝 Open Issue) --> Step2(🏷️ Add Score Label) Step2 --> Step3(💻 Write Code & PR) Step3 --> Step4(✅ Merge & Close) Step4 --> Step5(💰 Month End: Get Paid)
+```
 
 > *"Congratulations! You now have a software cooperative with no boss, clear rules, and fair revenue sharing."*
 
