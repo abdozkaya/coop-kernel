@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-op Fairness Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .score-badge { font-size: 0.9em; background: #e9ecef; color: #495057; padding: 5px 10px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="app" class="container py-5">
+    
+    <div class="text-center mb-5">
+        <h1 class="fw-bold"><i class="fa-solid fa-scale-balanced text-primary"></i> Fair Share Dashboard</h1>
+        <p class="text-muted">Transparent payout calculator for the collective</p>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="card p-4">
+                <h5 class="card-title mb-3">⚙️ Configuration</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">GitHub Owner/Org</label>
+                        <input v-model="config.owner" type="text" class="form-control" placeholder="e.g. MyCollective">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Repository Name</label>
+                        <input v-model="config.repo" type="text" class="form-control" placeholder="e.g. project-vpn">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Total Revenue (This Month)</label>
+                        <input v-model.number="config.revenue" type="number" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Reserve Fund Rate (%)</label>
+                        <input v-model.number="config.reserveRate" type="number" class="form-control" step="1" max="100">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">GitHub Access Token (Read-Only)</label>
+                        <input v-model="config.token" type="password" class="form-control" placeholder="ghp_...">
+                        <small class="text-muted">Token is processed locally in your browser. It is never sent to a server.</small>
+                    </div>
+                    <div class="col-12 mt-4">
+                        <button @click="calculate" :disabled="loading" class="btn btn-primary w-100 py-2">
+                            <span v-if="loading"><i class="fa-solid fa-spinner fa-spin"></i> Calculating...</span>
+                            <span v-else><i class="fa-solid fa-calculator"></i> Calculate Payouts</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div v-if="error" class="alert alert-danger text-center">{{ error }}</div>
+
+    <div v-if="results" class="row justify-content-center fade-in">
+        
+        <div class="col-md-8 mb-4">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="card p-3 bg-primary text-white">
+                        <h3>{{ formatCurrency(config.revenue) }}</h3>
+                        <small>Total Revenue</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 bg-success text-white">
+                        <h3>{{ formatCurrency(results.distributable) }}</h3>
+                        <small>Distributable (%{{ 100 - config.reserveRate }})</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 bg-secondary text-white">
+                        <h3>{{ formatCurrency(results.reserve) }}</h3>
+                        <small>Reserve Fund (%{{ config.reserveRate }})</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title">👥 Member Payout List</h5>
+                    <span class="badge bg-info text-dark">1 Point = {{ formatCurrency(results.pointValue) }}</span>
+                </div>
+                
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Member</th>
+                            <th class="text-center">Total Points</th>
+                            <th class="text-center">Share (%)</th>
+                            <th class="text-end">Payout</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="member in results.members" :key="member.name">
+                            <td class="fw-bold">
+                                <img :src="`https://github.com/${member.name}.png`" width="30" class="rounded-circle me-2">
+                                {{ member.name }}
+                            </td>
+                            <td class="text-center"><span class="score-badge">{{ member.points }} Pts</span></td>
+                            <td class="text-center">%{{ member.percent }}</td>
+                            <td class="text-end fw-bold text-success">{{ formatCurrency(member.payout) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-4">
+                    <h6 class="text-muted border-bottom pb-2">📂 Work Log (Point Sources)</h6>
+                    <ul class="list-group list-group-flush small">
+                        <li v-for="log in results.logs" class="list-group-item d-flex justify-content-between">
+                            <span>#{{ log.id }} - {{ log.title }}</span>
+                            <span class="text-muted">{{ log.points }} Pts ({{ log.users.join(', ') }})</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                loading: false,
+                error: null,
+                results: null,
+                config: {
+                    owner: '',
+                    repo: '',
+                    revenue: 0,
+                    reserveRate: 20,
+                    token: '' 
+                }
+            }
+        },
+        mounted() {
+            const saved = localStorage.getItem('coop_config');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                this.config.owner = parsed.owner;
+                this.config.repo = parsed.repo;
+                this.config.token = parsed.token;
+                this.config.reserveRate = parsed.reserveRate || 20;
+            }
+        },
+        methods: {
+            formatCurrency(value) {
+                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+            },
+            async calculate() {
+                this.loading = true;
+                this.error = null;
+                this.results = null;
+
+                localStorage.setItem('coop_config', JSON.stringify(this.config));
+
+                try {
+                    const reserveAmount = this.config.revenue * (this.config.reserveRate / 100);
+                    const distributable = this.config.revenue - reserveAmount;
+
+                    // Fetch Issues
+                    const response = await fetch(`https://api.github.com/repos/${this.config.owner}/${this.config.repo}/issues?state=closed&per_page=100`, {
+                        headers: {
+                            'Authorization': `token ${this.config.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+
+                    if (!response.ok) throw new Error('Failed to fetch GitHub data. Check your token and repo name.');
+                    
+                    const issues = await response.json();
+                    
+                    let memberScores = {};
+                    let totalPoints = 0;
+                    let logs = [];
+
+                    issues.forEach(issue => {
+                        if (issue.pull_request) return; 
+                        
+                        // Check for labels like "score:1.5" or "point:1.5" or "puan:1.5"
+                        let points = 0;
+                        const label = issue.labels.find(l => l.name.match(/^(score|point|puan):/i));
+                        if (label) {
+                            points = parseFloat(label.name.split(':')[1]);
+                        } else {
+                            return; 
+                        }
+
+                        const assignees = issue.assignees.map(u => u.login);
+                        if (assignees.length === 0) return;
+
+                        assignees.forEach(user => {
+                            if (!memberScores[user]) memberScores[user] = 0;
+                            memberScores[user] += points;
+                            totalPoints += points;
+                        });
+
+                        logs.push({
+                            id: issue.number,
+                            title: issue.title,
+                            points: points,
+                            users: assignees
+                        });
+                    });
+
+                    if (totalPoints === 0) throw new Error('No closed issues with score/point labels found.');
+
+                    const pointValue = distributable / totalPoints;
+
+                    this.results = {
+                        reserve: reserveAmount,
+                        distributable: distributable,
+                        pointValue: pointValue,
+                        logs: logs,
+                        members: Object.keys(memberScores).map(user => {
+                            const p = memberScores[user];
+                            const money = p * pointValue;
+                            return {
+                                name: user,
+                                points: p,
+                                payout: money,
+                                percent: ((money / distributable) * 100).toFixed(1)
+                            };
+                        }).sort((a,b) => b.payout - a.payout)
+                    };
+
+                } catch (e) {
+                    this.error = e.message;
+                } finally {
+                    this.loading = false;
+                }
+            }
+        }
+    }).mount('#app');
+</script>
+
+</body>
+</html>
